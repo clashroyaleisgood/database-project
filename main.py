@@ -5,8 +5,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def main_page():
-    play_list_sequence=['name', 'artist', 'album', 'series', 'time']
-    data = get_whole_table(db.playlist(), play_list_sequence)
+    playlist_sequence=['name', 'artist', 'album', 'series', 'time']
+    data = get_whole_table(db.playlist(), playlist_sequence)
     
     return render_template('init.html', data=data)
 
@@ -36,12 +36,14 @@ def song():
 
 @app.route('/artist/', methods=['GET'])
 def artist():
-    return render_template('artist.html')
+    artist_attr_seq=['name', 'company']
+    data= get_whole_table(db.artist(), artist_attr_seq)
+    return render_template('artist.html', data=data)
 
 @app.route('/album/', methods=['GET'])
 def album():
-    album_attr_sequence=['name', 'artist', 'year']
-    data= get_whole_table(db.album(), album_attr_sequence)
+    album_attr_seq=['name', 'artist', 'year']
+    data= get_whole_table(db.album(), album_attr_seq)
     
     return render_template('album.html', data=data)
 
@@ -53,7 +55,7 @@ def series():
 def info():
     return render_template('info.html')
 #----------------------------------------------------------------------------------------------------
-@app.route('/song/edit/<int:id>', methods=['GET', 'POST'])
+@app.route('/song/edit/<int:id>/', methods=['GET', 'POST'])
 def edit_song(id):
     song_attr_seq=['name', 'artist', 'link', 'album', 'series', 'time']
     data = db.select_one('song', song_attr_seq, ID=id)  # tuple
@@ -76,7 +78,6 @@ def edit_song(id):
         else:
             flash('更新失敗! ')
             return redirect(url_for('edit_song', **request.values, id=id))
-
 @app.route('/song/create/', methods=['GET', 'POST'])
 def create_song():
     song_attr_seq=['name', 'link', 'artist', 'album', 'series', 'time']
@@ -99,8 +100,7 @@ def create_song():
             flash('新增失敗! ')
             return redirect(url_for('create_song'))
             #return redirect(url_for('create_song'), code=307)   # POST 過來的資料都會留著 讚!
-
-@app.route('/song/_delete/<int:id>', methods= ['POST'])
+@app.route('/song/_delete/<int:id>/', methods= ['POST'])
 def delete_song(id):
     if db.delete('song', id=id):
         flash('刪除成功')
@@ -124,8 +124,7 @@ def create_album():
         else:
             flash('新增失敗! ')
             return redirect(url_for('create_album'))
-
-@app.route('/album/edit/<name>', methods=['GET', 'POST'])
+@app.route('/album/edit/<name>/', methods=['GET', 'POST'])
 def edit_album(name):
     album_attr_seq=['name', 'year', 'artist']
     data = db.select_one('album', album_attr_seq, name=name)  # tuple
@@ -149,14 +148,23 @@ def edit_album(name):
         else:
             flash('更新失敗! ')
             return redirect(url_for('edit_album', **request.values, name=name))
-
-@app.route('/album/_delete/<name>', methods=['POST'])
+@app.route('/album/_delete/<name>/', methods=['POST'])
 def delete_album(name):
     if db.delete('album', name=name):
         flash('刪除成功')
     else:
         flash('刪除失敗')
     return redirect(url_for('album'))
+
+@app.route('/artist/', methods=['GET', 'POST'])
+def create_artist():
+    pass
+@app.route('/artist/edit/<name>', methods=['GET', 'POST'])
+def edit_artist(name):
+    pass
+@app.route('/artist/_delete/<name>/', methods=['POST'])
+def delete_artist(name):
+    pass
 
 if __name__ == "__main__":
     db = Database()
