@@ -129,7 +129,7 @@ class Database():
         self.output('artist', 'name, company', kwargs=kwargs)
         return self.cursor
     def album(self, kwargs=None):
-        self.output('album', 'name. artist, year', kwargs=kwargs)
+        self.output('album', 'name, artist, year', kwargs=kwargs)
         return self.cursor
     def series(self, kwargs=None):
         self.output('series', 'name, type', kwargs=None)
@@ -137,6 +137,17 @@ class Database():
     def playlist(self):
         self.exec('SELECT name, artist, album, series, time, Sequence FROM song JOIN playlist ON ID = song_id ORDER BY Sequence;')
         return self.cursor
+def get_whole_table(cursor, attribute_sequence):
+    data=[]
+    for e in cursor:
+        item={}
+        for i in range(len(attribute_sequence)):
+            if e[i]:
+                item[attribute_sequence[i]] = e[i]
+            else:
+                item[attribute_sequence[i]] = ''
+        data += [item]
+    return data
 
 if __name__ == "__main__":
     my_db = Database()

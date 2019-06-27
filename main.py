@@ -1,20 +1,13 @@
 from flask import Flask, render_template, url_for, request, redirect, flash
-from db_support import Database
+from db_support import Database, get_whole_table
 
 app = Flask(__name__)
 
 @app.route('/')
 def main_page():
     play_list_sequence=['name', 'artist', 'album', 'series', 'time']
-    data = []
-    for e in db.playlist():
-        song={}
-        for i in range(5):
-            if e[i]:
-                song[play_list_sequence[i]] = e[i]
-            else:
-                song[play_list_sequence[i]] = ''
-        data += [song]
+    data = get_whole_table(db.playlist(), play_list_sequence)
+    
     return render_template('init.html', data=data)
 
 @app.route('/add_to_list/<int:id>', methods=['GET'])
@@ -36,16 +29,9 @@ def song():
     if request.args:
         flash("search for"+ outputstr)
 
-    data = []
     song_attr_seq=['id', 'name', 'artist', 'album', 'series', 'time']
-    for e in db.song(request.args):
-        song={}
-        for i in range(6):
-            if e[i]:
-                song[song_attr_seq[i]] = e[i]
-            else:
-                song[song_attr_seq[i]] = ''
-        data += [song]
+    data = get_whole_table(db.song(request.args), song_attr_seq)
+
     return render_template('song.html', data = data)
 
 @app.route('/artist/', methods=['GET'])
@@ -54,7 +40,10 @@ def artist():
 
 @app.route('/album/', methods=['GET'])
 def album():
-    return render_template('album.html')
+    album_attr_sequence=['name', 'artist', 'year']
+    data= get_whole_table(db.album(), album_attr_sequence)
+    # data={'name':'name', 'artist':'artist', 'year':1999}
+    return render_template('album.html', data=data)
 
 @app.route('/series/', methods=['GET'])
 def series():
@@ -63,7 +52,7 @@ def series():
 @app.route('/info/', methods=['GET'])
 def info():
     return render_template('info.html')
-
+#----------------------------------------------------------------------------------------------------
 @app.route('/song/edit/<int:id>', methods=['GET', 'POST'])
 def edit_song(id):
     song_attr_seq=['name', 'artist', 'link', 'album', 'series', 'time']
@@ -119,6 +108,15 @@ def delete_song(id):
     else:
         flash('刪除失敗')
     return redirect(url_for('song'))
+@app.route('/album/create/', methods=['GET', 'POST'])
+def create_album():
+    return render_template('edit album')
+@app.route('/album/edit/<name>', methods=['GET', 'POST'])
+def edit_album(name):
+    return render_template('edit album')
+@app.route('/album/_delete/<name>')
+def delete_album(name):
+    return redirect('album')
 
 if __name__ == "__main__":
     db = Database()
