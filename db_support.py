@@ -49,7 +49,6 @@ class Database():
             self.exec('SELECT '+format_args(args, True)+' FROM '+table+' WHERE '+format_kwargs(restrict)+';')
         return self.cursor.fetchone()
         
-
     def insert(self, table, args, default = False):
         return self.exec('INSERT INTO {} VALUES({}{});'.format(
                          table, 'default, 'if default else '', format_args(args, False)))
@@ -69,11 +68,13 @@ class Database():
             self.exec("SELECT " + args + ' FROM ' + table)
         return self.cursor
 
-    def exec(self, command):
-        print("try exec: " + command)
+    def exec(self, command, commit=False):
+        print("try exec{}: {}".format('+commit' if commit else '', command))
         try:
             self.cursor.execute(command)
-            return True
+            if commit:
+                self.db.commit()
+            return self.cursor
         except Exception as e:
             print('ERROR {}: {}'.format(e.args[0], e.args[1]))
             #print('Got error {!r}, errno is {}'.format(e, e.args[0]))
@@ -112,7 +113,16 @@ if __name__ == "__main__":
     my_db.connect()
     my_db.select_db(db = 'temp_muxic')
     print(my_db.select_one('song', 'ID, name, link', **{'name': 'glagla'}))
-    '''
-    for e in my_db.playlist():
-        print(e)
-    '''
+    sql='select'
+    # my_db.exec('insert into song values(default, \'name\', \'華晨宇\', Null, Null, Null, 123);', True)
+    while sql:
+        if sql.split(',')[-1] == 'commit':
+            result=my_db.exec(sql.split(',')[0], True)
+        else:
+            result=my_db.exec(sql)
+        if not isinstance(result, int):
+            for e in result:
+                print(e)
+        else:
+            print('return:', result)
+        sql=input('mysql> ')
