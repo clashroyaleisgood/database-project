@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include "macros/include datas.html" %}
+	<script>
+		$(document).ready(function () {
+			$("form").attr("action", location.href); //返回原先頁面
+		});
+	</script>
+	<script>
+		// check completion
+		// name, artist, link, album, series, time
+		function check_values() {
+			if ($("#name").val()) {
+				alert("送出!");
+				return true;
+			} else {
+				alert("data not complete");
+				return false;
+			}
+		}
+	</script>
+</head>
+
+<body style=" font-family: 微軟正黑體;">
+{% include "macros/banner.html" %}
+	<div class="px-5 mt-3 col-xs-9 col-sm-9 col-md-9 col-lg-9">
+		<div style="font-size: 30px">
+			<i class="fas fa-pencil-alt"></i>
+			編輯演出者資訊
+		</div>
+
+		<form action="default" method="POST" name="form1" style="font-size: 20px">
+			<div class="form-group row" style="margin-top:30px">
+				<label class="col-form-label" style="margin-left:15px">歌手</label>
+				<div class="col-7">
+					<input class="form-control" type="text" name="name" value='{{ name }}' placeholder='name...>'
+						id="name" style="margin-left:20px">
+				</div>
+			</div>
+
+			<div class="form-group row" style="margin-top:20px">
+				<label class="col-form-label" style="margin-left:15px">唱片公司</label>
+				<div class="col-7">
+					<input class="form-control" type="text" name="company" value='{{ company }}' placeholder='company...>'
+						id="company" style="margin-left:20px">
+				</div>
+			</div>
+
+			<!-- 送出按鈕-->
+			<input type="submit" id="submit" class="btn btn-primary" value="送出" onclick="return check_values()"
+				style="margin-bottom:50px">
+			<!-- 返回按鈕-->
+			<input type="button" id="back" class="btn btn-warning" value="返回" href="javascript:;"
+				onclick="location.href='/';" style="margin-bottom:50px; margin-left:10px">
+		</form>
+	</div>
+
+	<script>
+		//{%- with messages = get_flashed_messages() -%}{%- if messages -%}{%- for message in messages %}
+		alert('{{ message }}');
+		//{% endfor -%}{%- endif -%}{%- endwith %}
+	</script>
+</body>
+
+</html>

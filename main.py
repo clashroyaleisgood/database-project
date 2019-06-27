@@ -55,9 +55,31 @@ def series():
 def info():
     return render_template('info.html')
 #----------------------------------------------------------------------------------------------------
+@app.route('/song/create/', methods=['GET', 'POST'])
+def create_song():
+    song_attr_seq=('name', 'link', 'artist', 'album', 'series', 'time')
+    if request.method == 'GET':
+        print("GET create song...>")
+        for e in request.args:
+            print(e, ':', request.args[e])
+        
+        return render_template('edits/edit song.html', **request.args)
+    elif request.method == 'POST':
+        print("POST create song...>")
+        for e in request.values:
+            print(e, ':', request.values[e])
+        
+        result= db.insert('song', [request.values[e] for e in song_attr_seq], default=True)
+        if result:
+            flash('新增成功! ')
+            return redirect(url_for('song'))
+        else:
+            flash('新增失敗! ')
+            return redirect(url_for('create_song'))
+            #return redirect(url_for('create_song'), code=307)   # POST 過來的資料都會留著 讚!
 @app.route('/song/edit/<int:id>/', methods=['GET', 'POST'])
 def edit_song(id):
-    song_attr_seq=['name', 'artist', 'link', 'album', 'series', 'time']
+    song_attr_seq=('name', 'artist', 'link', 'album', 'series', 'time')
     data = db.select_one('song', song_attr_seq, ID=id)  # tuple
     data = dict(zip(song_attr_seq, data))   # 先 zip 成[(attr, val), ()...] 再轉成 dict
     if request.method == 'GET':
@@ -78,28 +100,6 @@ def edit_song(id):
         else:
             flash('更新失敗! ')
             return redirect(url_for('edit_song', **request.values, id=id))
-@app.route('/song/create/', methods=['GET', 'POST'])
-def create_song():
-    song_attr_seq=['name', 'link', 'artist', 'album', 'series', 'time']
-    if request.method == 'GET':
-        print("GET create song...>")
-        for e in request.args:
-            print(e, ':', request.args[e])
-        
-        return render_template('edits/edit song.html', **request.args)
-    elif request.method == 'POST':
-        print("POST create song...>")
-        for e in request.values:
-            print(e, ':', request.values[e])
-        
-        result= db.insert('song', [request.values[e] for e in song_attr_seq], default=True)
-        if result:
-            flash('新增成功! ')
-            return redirect(url_for('song'))
-        else:
-            flash('新增失敗! ')
-            return redirect(url_for('create_song'))
-            #return redirect(url_for('create_song'), code=307)   # POST 過來的資料都會留著 讚!
 @app.route('/song/_delete/<int:id>/', methods= ['POST'])
 def delete_song(id):
     if db.delete('song', id=id):
@@ -111,7 +111,7 @@ def delete_song(id):
 @app.route('/album/create/', methods=['GET', 'POST'])
 def create_album():
     # album_attr_seq=['name', 'artist', 'year'] 這是錯的順序...
-    album_attr_seq=['name', 'year', 'artist']
+    album_attr_seq=('name', 'year', 'artist')
     if request.method == 'GET':
         return render_template('edits/edit album.html')
     elif request.method == 'POST':
@@ -156,9 +156,21 @@ def delete_album(name):
         flash('刪除失敗')
     return redirect(url_for('album'))
 
-@app.route('/artist/', methods=['GET', 'POST'])
+@app.route('/artist/create/', methods=['GET', 'POST'])
 def create_artist():
-    pass
+    artist_attr_seq=('name', 'company')
+    if request.method == 'GET':
+        return render_template('edits/edit artist.html')
+    elif request.method == 'POST':
+        for e in request.values:
+            print(e, ':', request.values[e])
+        result= db.insert('artist', (request.values[e] for e in artist_attr_seq))
+        if result:
+            flash('新增成功! ')
+            return redirect(url_for('artist'))
+        else:
+            flash('新增失敗! ')
+            return redirect(url_for('create_artist'))
 @app.route('/artist/edit/<name>', methods=['GET', 'POST'])
 def edit_artist(name):
     pass
