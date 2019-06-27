@@ -13,16 +13,23 @@ def format_kwargs(kwargs, sep=', ', insert=False):
         if not insert:
             args += sep.join( e+'='+format_str(kwargs[e]) for e in kwargs if kwargs[e] != '')
         else:
-            args += sep.join( e+'='+format_str(kwargs[e]) if kwargs[e] !='' else 'NULL' for e in kwargs)
+            args += sep.join( e+'='+format_str(kwargs[e]) if kwargs[e] !='' else e+'=NULL' for e in kwargs)
     return args
 
 def format_args(args, is_attr):
     # (1, 2, '3')
     if not is_attr:
-        return ', '.join(format_str(e) for e in args)
+        return ', '.join(format_str(e) if e != '' else 'Null' for e in args)
     else:
         return ', '.join(e for e in args)
 
+def same(lhs, rhs): # None == ''
+    if lhs == None:
+        lhs=''
+    if rhs == None:
+        rhs=''
+    lhs, rhs = str(lhs), str(rhs)
+    return lhs == rhs
 
 class Database():
     def __init__(self):
@@ -50,15 +57,38 @@ class Database():
         return self.cursor.fetchone()
         
     def insert(self, table, args, default = False):
-        return self.exec('INSERT INTO {} VALUES({}{});'.format(
-                         table, 'default, 'if default else '', format_args(args, False)))
+        if self.exec('INSERT INTO {} VALUES({}{});'.format(
+                     table, 'default, 'if default else '', format_args(args, False)), True):
+            return True
+        else:
+            return False
 
-    def update(self, table, kwargs, **restrict):
-        temp_exec('UPDATE {} SET {} WHERE {};'.format(
-                  table, format_kwargs(kwargs), format_kwargs(restrict, sep=' and ') ))
+    def update(self, table, updated, original, **restrict):
+        change={}
+        for e in original:
+            if same(updated[e], original[e]):
+                print('same', e)
+                pass
+            else:
+                print('not same', updated[e], original[e])
+                change[e] = updated[e]
+        if change:
+            if self.exec('UPDATE {} SET {} WHERE {};'.format(
+                         table, format_kwargs(change, insert=True), format_kwargs(restrict, sep=' and ') ), True):
+                return True
+            else:
+                return False
+        else:
+            print('same updated')
+
+
+        return True
         
     def delete(self, table, **restrict):
-        temp_exec('DELETE FROM {} WHERE {};'.format(table, format_kwargs(restrict, sep=' and ')))
+        if self.exec('DELETE FROM {} WHERE {};'.format(table, format_kwargs(restrict, sep=' and ')), True):
+            return True
+        else:
+            return False
 
     def output(self, table, args='*', kwargs=None):
         formated = format_kwargs(kwargs, ' and ')
@@ -115,6 +145,9 @@ if __name__ == "__main__":
     print(my_db.select_one('song', 'ID, name, link', **{'name': 'glagla'}))
     sql='select'
     # my_db.exec('insert into song values(default, \'name\', \'華晨宇\', Null, Null, Null, 123);', True)
+    a= my_db.exec('select * from song where id = 37').fetchone()
+    print(a)
+    '''
     while sql:
         if sql.split(',')[-1] == 'commit':
             result=my_db.exec(sql.split(',')[0], True)
@@ -126,3 +159,4 @@ if __name__ == "__main__":
         else:
             print('return:', result)
         sql=input('mysql> ')
+    '''

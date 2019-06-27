@@ -3,20 +3,6 @@ from db_support import Database
 
 app = Flask(__name__)
 
-@app.route('/test_page/')
-def test_page():
-    return render_template('test.html')
-
-@app.route('/test/', methods=['GET', 'POST'])
-def for_testing():
-    print('GET')
-    for e in request.args:
-        print(e, ': ', repr(request.args[e]))
-    print('POST')
-    for e in request.values:
-        print(e, ': ', repr(request.values[e]))
-    return redirect(url_for('test_page'))
-
 @app.route('/')
 def main_page():
     return render_template('init.html')
@@ -43,7 +29,10 @@ def song():
     for e in db.song(request.args):
         song={}
         for i in range(6):
-            song[song_attr_seq[i]] = e[i]
+            if e[i]:
+                song[song_attr_seq[i]] = e[i]
+            else:
+                song[song_attr_seq[i]] = ''
         data += [song]
     return render_template('song.html', data = data)
 
@@ -65,19 +54,23 @@ def info():
 
 @app.route('/song/edit/<int:id>', methods=['GET', 'POST'])
 def edit_song(id):
+    song_attr_seq=['name', 'artist', 'link', 'album', 'series', 'time']
+    data = db.select_one('song', song_attr_seq, ID=id)  # tuple
+    data = dict(zip(song_attr_seq, data))   # 先 zip 成[(attr, val), ()...] 再轉成 dict
     if request.method == 'GET':
-        print("id:", id)
-        song_attr_seq=['name', 'artist', 'link', 'album', 'series', 'time']
-        data = db.select_one('song', song_attr_seq, ID=id)
-        data = dict(zip(song_attr_seq, data))   # 先 zip 成[(attr, val), ()...] 再轉成 dict
-        # print(data)
+        
+        for e in data:
+            if data[e] == None:
+                data[e] = ''
+        #print(data)
         return render_template('edits/edit song.html', **data)
     elif request.method == 'POST':
         print("POST create song...>")
         for e in request.values:
             print(e, ':', request.values[e])
-        # TODO SQL update   success >> return true
-        if True:
+
+        result=db.update('song', request.values, data, id=id)
+        if result:
             flash('更新成功! ')
             return redirect(url_for('song'))
         else:
@@ -97,16 +90,8 @@ def create_song():
         print("POST create song...>")
         for e in request.values:
             print(e, ':', request.values[e])
-        # TODO SQL insert   success >> return true
         
-        args={}
-        for e in request.values:
-            if e is 'time':
-                args[e] = int(request.values[e])
-            else:
-                args[e] = request.values[e]
-
-        result= db.insert('song', [args[e] for e in song_attr_seq], default=True)
+        result= db.insert('song', [request.values[e] for e in song_attr_seq], default=True)
         if result:
             flash('新增成功! ')
             return redirect(url_for('song'))
@@ -115,22 +100,13 @@ def create_song():
             return redirect(url_for('create_song'))
             #return redirect(url_for('create_song'), code=307)   # POST 過來的資料都會留著 讚!
 
-@app.route('/song/_delete/', methods= ['POST'])
-def delete():
-    return "123"
-
-def fake_song_data():
-    data = []
-    for i in range(5):    # id, name, artist, album, series, time
-        song = {}
-        song['id'] = i
-        song['name'] = 'name {}'.format(i)
-        song['artist'] = 'artist {}'.format(i)
-        song['album'] = 'album {}'.format(i)
-        song['series'] = 'series {}'.format(i)
-        song['time'] = 'time {}'.format(i)
-        data += [song]
-    return data
+@app.route('/song/_delete/<int:id>', methods= ['POST'])
+def delete_song(id):
+    if db.delete('song', id=id):
+        flash('刪除成功')
+    else:
+        flash('刪除失敗')
+    return redirect(url_for('song'))
 
 if __name__ == "__main__":
     db = Database()
