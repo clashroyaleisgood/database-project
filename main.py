@@ -5,19 +5,10 @@ app = Flask(__name__)
 
 @app.route('/')
 def main_page():
-    playlist_sequence=['name', 'artist', 'album', 'series', 'time']
+    playlist_sequence=['name', 'artist', 'album', 'series', 'time', 'sequence']
     data = get_whole_table(db.playlist(), playlist_sequence)
     
     return render_template('init.html', data=data)
-
-@app.route('/add_to_list/<int:id>', methods=['GET'])
-def add_to_list(id):
-    if db.insert('playlist', [id], default=True):
-        song_name=db.select_one('song', 'name', id=id)[0]
-        flash("add song: {} to list".format(song_name))
-    else:
-        flash('新增失敗')
-    return redirect(url_for('main_page'))
 
 @app.route('/song/', methods=['GET'])       # 搜尋的內容放在 GET 區 ?abc=abc
 def song():
@@ -57,6 +48,22 @@ def series():
 def info():
     return render_template('info.html')
 #----------------------------------------------------------------------------------------------------
+@app.route('/add_to_list/<int:id>/', methods=['GET'])
+def add_to_list(id):
+    if db.insert('playlist', [id], default=True):
+        song_name=db.select_one('song', 'name', id=id)[0]
+        flash("add song: {} to list".format(song_name))
+    else:
+        flash('新增失敗')
+    return redirect(url_for('main_page'))
+@app.route('/playlist/_delete/<int:sequence>/')
+def delete_playlist(sequence):
+    if db.delete('playlist', Sequence=sequence):
+        flash('刪除成功')
+    else:
+        flash('刪除失敗')
+    return redirect(url_for('main_page'))
+
 @app.route('/song/create/', methods=['GET', 'POST'])
 def create_song():
     song_attr_seq=('name', 'link', 'artist', 'album', 'series', 'time')
@@ -173,7 +180,7 @@ def create_artist():
         else:
             flash('新增失敗! ')
             return redirect(url_for('create_artist'))
-@app.route('/artist/edit/<name>', methods=['GET', 'POST'])
+@app.route('/artist/edit/<name>/', methods=['GET', 'POST'])
 def edit_artist(name):
     artist_attr_seq=('name', 'company')
     data = db.select_one('artist', artist_attr_seq, name=name)  # tuple
@@ -244,7 +251,7 @@ def edit_series(name):
         else:
             flash('更新失敗! ')
             return redirect(url_for('edit_series', **request.values, name=name))
-@app.route('/series/_delete/<name>', methods=['GET', 'POST'])
+@app.route('/series/_delete/<name>/', methods=['GET', 'POST'])
 def delete_series(name):
     if db.delete('series', name=name):
         flash('刪除成功')

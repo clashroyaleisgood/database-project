@@ -20,7 +20,7 @@
 					allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
 					allowfullscreen></iframe>
 			</div>
-			<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+			<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
 
 				<span style="color:black;margin-top:40px;margin-left:10px;font-size: 40px">
 					<i class="far fa-list-alt"></i>
@@ -50,7 +50,7 @@
 							<td> {{ e['time'] }} </td>
 							<td>
 								<!--<a href="edit" class="btn btn-info btn-sm">編輯</a>-->
-								<a href="delete" class="btn btn-info btn-sm btn-danger" style="margin-left:10px">刪除</a>
+								<a href="{{ url_for('delete_playlist', sequence=e['sequence']) }}" class="btn btn-info btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
 							</td>
 						</tr>
 						{% endfor %}
