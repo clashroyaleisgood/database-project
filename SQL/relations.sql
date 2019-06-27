@@ -32,12 +32,6 @@ insert into song values(default, '米津玄師 MV「orion」', 'lzAyrgSqeeE', '�
 insert into song values(default, '米津玄師 MV「海の幽霊」Spirits of the Sea', '1s84rIhPuhk', '米津玄師', NULL, '日文', 255);
 insert into song values(default, '米津玄師 MV「ピースサイン」Kenshi Yonezu / Peace Sign', '9aJVr5tTTWk', '米津玄師', 'BOOTLEG', '日文', 264);
 insert into song values(default, '米津玄師 MV「Flowerwall」', 'Y4_vXzyOJHE', '米津玄師', 'Bremen', '日文', 309);
-insert into song values(default, '華晨宇《蜉蝣》Official HD 官方MV', 'ZWc6Yta51X4', '華晨宇', '異類', '中文', 307);
-insert into song values(default, '華晨宇《國王與乞丐》feat.楊宗緯 Official HD 官方MV', 'cmQwQwLoYxk', '華晨宇', '異類', '中文', 258);
-insert into song values(default, '華晨宇《異類》Official HD 官方MV', 'MPXR_0vd0a0', '華晨宇', '異類', '中文', 258);
-insert into song values(default, '華晨宇《卡西莫多的禮物》Official HD 官方MV', 'qnfVvfLoG3Y', '華晨宇', '卡西莫多的禮物', '中文', 151);
-insert into song values(default, '華晨宇《煙火裡的塵埃》Official HD 官方MV', 'b6cX_To_mvs', '華晨宇', '卡西莫多的禮物', '中文', 322);
-insert into song values(default, '華晨宇《齊天》Official HD 官方MV（電影悟空傳主題曲）', 'aJMTduUTX8Y', '華晨宇',NULL, '中文', 283);
 
 insert into playlist values(default, 1);
 insert into playlist values(default, 2);
