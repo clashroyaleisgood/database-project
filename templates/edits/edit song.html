@@ -36,48 +36,48 @@
 			<div class="form-group row" style="margin-top:30px">
 				<label class="col-form-label" style="margin-left:15px">曲名</label>
 				<div class="col-7">
-					<input class="form-control" type="text" name="name" value='{{ name }}' placeholder='name...>'
-						id="name" style="margin-left:20px">
+					<input class="form-control" type="text" name="name" value='{{ name }}' placeholder="輸入曲名"
+						id="name" maxlength="100" style="margin-left:20px">
 				</div>
 			</div>
 
 			<div class="form-group row" style="margin-top:20px">
 				<label class="col-form-label" style="margin-left:15px">歌手</label>
 				<div class="col-7">
-					<input class="form-control" type="text" name="artist" value='{{ artist }}' placeholder='artist...>'
-						id="artist" style="margin-left:20px">
+					<input class="form-control" type="text" name="artist" value='{{ artist }}' placeholder="輸入歌手"
+						id="artist" maxlength="20" style="margin-left:20px">
 				</div>
 			</div>
 
 			<div class="form-group row" style="margin-top:20px">
 				<label class="col-form-label" style="margin-left:15px">連結</label>
 				<div class="col-7">
-					<input class="form-control" type="text" name="link" value='{{ link }}' placeholder='link...>'
-						id="link" style="margin-left:20px">
+					<input class="form-control" type="text" name="link" value='{{ link }}' placeholder="輸入連結 (watch?v=之後11碼)"
+						id="link" maxlength="11" style="margin-left:20px">
 				</div>
 			</div>
 
 			<div class="form-group row" style="margin-top:20px">
 				<label class="col-form-label" style="margin-left:15px">專輯</label>
 				<div class="col-7">
-					<input class="form-control" type="text" name="album" value='{{ album }}' placeholder='album...>'
-						id="album" style="margin-left:20px">
+					<input class="form-control" type="text" name="album" value='{{ album }}' placeholder="輸入專輯"
+						id="album" maxlength="20" style="margin-left:20px">
 				</div>
 			</div>
 
 			<div class="form-group row" style="margin-top:20px">
 				<label class="col-form-label" style="margin-left:15px">系列</label>
 				<div class="col-7">
-					<input class="form-control" type="text" name="series" value='{{ series }}' placeholder='series...>'
-						id="series" style="margin-left:20px">
+					<input class="form-control" type="text" name="series" value='{{ series }}' placeholder="輸入系列"
+						id="series" maxlength="20" style="margin-left:20px">
 				</div>
 			</div>
 
 			<div class="form-group row" style="margin-top:20px">
 				<label class="col-form-label" style="margin-left:15px">長度</label>
 				<div class="col-7">
-					<input class="form-control" type="number" name="time" value='{{ time }}' placeholder='time...>'
-						id="time" style="margin-left:20px" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')">
+					<input class="form-control" type="number" name="time" value='{{ time }}' placeholder="輸入長度(秒)"
+						id="time" min="1" style="margin-left:20px" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')">
 				</div>
 				<label style="margin-left:20px">秒</label>
 			</div>

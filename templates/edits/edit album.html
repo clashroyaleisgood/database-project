@@ -36,24 +36,24 @@
 			<div class="form-group row" style="margin-top:30px">
 				<label class="col-form-label" style="margin-left:15px">專輯名</label>
 				<div class="col-7">
-					<input class="form-control" type="text" name="name" value='{{ name }}' placeholder='name...>'
-						id="name" style="margin-left:20px">
+					<input class="form-control" type="text" name="name" value='{{ name }}' placeholder="輸入專輯名"
+						id="name" maxlength="20" style="margin-left:2px">
 				</div>
 			</div>
 
 			<div class="form-group row" style="margin-top:20px">
 				<label class="col-form-label" style="margin-left:15px">歌手</label>
 				<div class="col-7">
-					<input class="form-control" type="text" name="artist" value='{{ artist }}' placeholder='artist...>'
-						id="artist" style="margin-left:20px">
+					<input class="form-control" type="text" name="artist" value='{{ artist }}' placeholder="輸入歌手"
+						id="artist" maxlength="20" style="margin-left:20px">
 				</div>
 			</div>
 
 			<div class="form-group row" style="margin-top:20px">
 				<label class="col-form-label" style="margin-left:15px">年份</label>
 				<div class="col-7">
-					<input class="form-control" type="number" name="year" value='{{ year }}' placeholder='link...>'
-						id="link" style="margin-left:20px">
+					<input class="form-control" type="number" name="year" value='{{ year }}' placeholder="輸入年份(西元)"
+						id="link" min="0" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" style="margin-left:20px">
 				</div>
 			</div>
 
