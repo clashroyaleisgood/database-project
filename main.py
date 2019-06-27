@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def main_page():
-    playlist_sequence=['name', 'artist', 'album', 'series', 'time', 'link', 'sequence']
+    playlist_sequence=('name', 'artist', 'album', 'series', 'time', 'link', 'sequence')
     data = get_whole_table(db.playlist(), playlist_sequence)
     
     return render_template('init.html', data=data)
@@ -17,8 +17,8 @@ def song():
     for e in request.args:
         print(e, ': ', repr(request.args[e]))
         outputstr += ' {}: {}'.format(e, request.args[e])
-    if request.args:
-        flash("search for"+ outputstr)
+    # if request.args:
+        # flash("search for"+ outputstr)
 
     song_attr_seq=('id', 'name', 'artist', 'album', 'series', 'time')
     data = get_whole_table(db.song(request.args), song_attr_seq)
