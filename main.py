@@ -5,14 +5,26 @@ app = Flask(__name__)
 
 @app.route('/')
 def main_page():
-    return render_template('init.html')
+    play_list_sequence=['name', 'artist', 'album', 'series', 'time']
+    data = []
+    for e in db.playlist():
+        song={}
+        for i in range(5):
+            if e[i]:
+                song[play_list_sequence[i]] = e[i]
+            else:
+                song[play_list_sequence[i]] = ''
+        data += [song]
+    return render_template('init.html', data=data)
 
-@app.route('/add_to_list', methods=['GET'])
-def add_to_list():
-    id = request.args['id']
+@app.route('/add_to_list/<int:id>', methods=['GET'])
+def add_to_list(id):
     # insert song(id) to playlist
-    flash("add song: {} to list".format(id))
-    return redirect(url_for('song'))
+    if db.insert('playlist', [id], default=True):
+        flash("add song: {} to list".format(id))
+    else:
+        flash('新增失敗')
+    return redirect(url_for('main_page'))
 
 @app.route('/song/', methods=['GET'])       # 搜尋的內容放在 GET 區 ?abc=abc
 def song():

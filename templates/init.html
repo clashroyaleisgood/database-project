@@ -35,6 +35,7 @@
 							<td><b> 歌手 </b></td>
 							<td><b> 專輯 </b></td>
 							<td><b> 系列 </b></td>
+							<td><b> 時間 </b></td>
 							<td><b> 刪除 </b></td>
 						</tr>
 					</thead>
@@ -42,10 +43,11 @@
 						{% for e in data %}
 						<tr>
 							<td> {{ e[0] }} </td>
-							<td> {{ e[1] }} </td>
-							<td> {{ e[2] }} </td>
-							<td> e[3] </td>
-							<td> e[4] </td>
+							<td> {{ e['name'] }} </td>
+							<td> {{ e['artist'] }} </td>
+							<td> e['album'] </td>
+							<td> e['series'] </td>
+							<td> e['time'] </td>
 							<td>
 								<!--<a href="edit" class="btn btn-info btn-sm">編輯</a>-->
 								<a href="delete" class="btn btn-info btn-sm btn-danger" style="margin-left:10px">刪除</a>
