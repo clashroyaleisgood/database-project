@@ -29,27 +29,29 @@ def song():
     if request.args:
         flash("search for"+ outputstr)
 
-    song_attr_seq=['id', 'name', 'artist', 'album', 'series', 'time']
+    song_attr_seq=('id', 'name', 'artist', 'album', 'series', 'time')
     data = get_whole_table(db.song(request.args), song_attr_seq)
 
     return render_template('song.html', data = data)
 
 @app.route('/artist/', methods=['GET'])
 def artist():
-    artist_attr_seq=['name', 'company']
+    artist_attr_seq=('name', 'company')
     data= get_whole_table(db.artist(), artist_attr_seq)
     return render_template('artist.html', data=data)
 
 @app.route('/album/', methods=['GET'])
 def album():
-    album_attr_seq=['name', 'artist', 'year']
+    album_attr_seq=('name', 'artist', 'year')
     data= get_whole_table(db.album(), album_attr_seq)
     
     return render_template('album.html', data=data)
 
 @app.route('/series/', methods=['GET'])
 def series():
-    return render_template('series.html')
+    series_attr_seq=('name', 'type')
+    data= get_whole_table(db.series(), series_attr_seq)
+    return render_template('series.html', data=data)
 
 @app.route('/info/', methods=['GET'])
 def info():
@@ -202,6 +204,16 @@ def delete_artist(name):
     else:
         flash('刪除失敗')
     return redirect(url_for('artist'))
+
+@app.route('/series/create/', methods=['GET', 'POST'])
+def create_series():
+    pass
+@app.route('/series/edit/<name>/', methods=['GET', 'POST'])
+def edit_series(name):
+    pass
+@app.route('/series/_delete/<name>', methods=['GET', 'POST'])
+def delete_series(name):
+    pass
 
 if __name__ == "__main__":
     db = Database()
