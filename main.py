@@ -173,10 +173,35 @@ def create_artist():
             return redirect(url_for('create_artist'))
 @app.route('/artist/edit/<name>', methods=['GET', 'POST'])
 def edit_artist(name):
-    pass
+    artist_attr_seq=['name', 'company']
+    data = db.select_one('artist', artist_attr_seq, name=name)  # tuple
+    data = dict(zip(artist_attr_seq, data))   # 先 zip 成[(attr, val), ()...] 再轉成 dict
+
+    if request.method == 'GET':
+        for e in data:
+            if data[e] == None:
+                data[e] = ''
+        print(data)
+        return render_template('edits/edit artist.html', **data)
+
+    elif request.method == 'POST':
+        for e in request.values:
+            print(e, ':', request.values[e])
+
+        result=db.update('artist', request.values, data, name=name)
+        if result:
+            flash('更新成功! ')
+            return redirect(url_for('artist'))
+        else:
+            flash('更新失敗! ')
+            return redirect(url_for('edit_artist', **request.values, name=name))
 @app.route('/artist/_delete/<name>/', methods=['POST'])
 def delete_artist(name):
-    pass
+    if db.delete('artist', name=name):
+        flash('刪除成功')
+    else:
+        flash('刪除失敗')
+    return redirect(url_for('artist'))
 
 if __name__ == "__main__":
     db = Database()

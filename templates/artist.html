@@ -44,7 +44,10 @@
 							<a href="{{ url_for('edit_artist', name=e['name']) }}" class="btn btn-primary btn-sm"><i class="fas fa-pen"></i></a>
 						</td>
 						<td>
-							<a href="{{ url_for('delete_artist', name=e['name']) }}" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+							<form action="{{ url_for('delete_artist', name=e['name']) }}" method="POST">
+								<button type="submit"class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
+							</form>
+							<!--a href="{{ url_for('delete_artist', name=e['name']) }}" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a-->
 						</td>
 						<td>
 							<a href="{{ url_for('song', artist=e['name']) }}" class="btn btn-sm btn-success"><i class="fas fa-arrow-right"></i></a>
