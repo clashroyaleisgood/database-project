@@ -1,7 +1,40 @@
-from flask import Flask, render_template, url_for, request, redirect, flash
+from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
 from db_support import Database, get_whole_table
 
 app = Flask(__name__)
+''' test region
+@app.route('/playground/')
+def playground():
+    playlist_sequence=('name', 'artist', 'album', 'series', 'time', 'link', 'sequence')
+    data = get_whole_table(db.playlist(), playlist_sequence)
+    return render_template('test.html', data=data)
+
+@app.route('/test/', methods=['POST'])
+def test():
+    return jsonify([{'ap':'123'}, {'ap':'123'}])
+'''
+@app.route('/small_playlist/')
+def small_playlist():
+    playlist_sequence=('name', 'artist', 'album', 'series', 'time', 'link', 'sequence')
+    data = get_whole_table(db.playlist(), playlist_sequence)
+    return render_template('small_playlist.html', data=data)
+
+@app.route('/play_next_song/', methods=['GET', 'POST'])
+def play_next():
+    db.exec('select @temp := min(Sequence) from playlist;')
+    db.exec('DELETE FROM playlist WHERE Sequence=@temp;', commit=True)
+    db.exec('select @temp := min(Sequence) from playlist;')
+    complicated_sql_query= \
+        'select link, Sequence, name \
+        from song join playlist \
+        ON ID = song_id \
+        where Sequence=@temp;'
+    result = db.exec(complicated_sql_query).fetchone()
+    # print('res=', result)
+    if result:
+        return result[0]
+    else:
+        return "no data"
 
 @app.route('/')
 def main_page():
@@ -51,11 +84,12 @@ def info():
 @app.route('/add_to_list/<int:id>/', methods=['GET'])
 def add_to_list(id):
     if db.insert('playlist', [id], default=True):
-        song_name=db.select_one('song', 'name', id=id)[0]
-        flash("add song: {} to list".format(song_name))
+        # song_name=db.select_one('song', 'name', id=id)[0]
+        # flash("add song: {} to list".format(song_name))
+        pass
     else:
         flash('新增失敗')
-    return redirect(url_for('main_page'))
+    return redirect(url_for('song'))
 @app.route('/playlist/_delete/<int:sequence>/')
 def delete_playlist(sequence):
     if db.delete('playlist', Sequence=sequence):

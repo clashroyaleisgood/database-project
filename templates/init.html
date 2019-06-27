@@ -3,9 +3,30 @@
 <head>
 {% include "macros/include datas.html" %}
 	<script>
+		function get_first_link() {
+			return "{%- if data|length > 0 -%}{{ data[0]['link'] }}{%- else -%}{{'4n6WEDMxCb8'}}{%-endif-%}";
+		}
 		$(document).ready(function () {
 			$("#nav-main").css("background-color", "#99FFFF");
 		});
+		function next_song() {
+            $.post("{{ url_for('play_next') }}",
+                {},
+                function(data, status) {
+					if(data != 'no data') {
+						$("#player").remove();
+						$('#show_video').append("<div id='player'></div>");
+						player = createPlayer({id: 'player', videoId: data});
+					} else {
+						alert('last song');
+					}
+                    //console.log(data);
+					$.get("{{ url_for('small_playlist') }}", function(data, status) {
+						$("#tbody").html(data);
+					});
+                }
+            );
+		};
 	</script>
 </head>
 
@@ -15,10 +36,9 @@
 {% include "macros/nav.html" %}
 		<div class="col">
 			<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9" style="margin-top:30px">
-				<iframe width="848" height="480"
-					src="https://www.youtube-nocookie.com/embed/{{ data[0]['link'] }}?rel=0&autoplay=1" frameborder="0"
-					allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-					allowfullscreen></iframe>
+				<div id='show_video'>
+{% include "video.html" %}
+				</div>
 			</div>
 			<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
 
@@ -39,21 +59,8 @@
 							<td><b> 刪除 </b></td>
 						</tr>
 					</thead>
-					<tbody>
-						{% for e in data -%}
-						<tr>
-							<td> {{ loop.index }} </td>
-							<td> {{ e['name'] }} </td>
-							<td> {{ e['artist'] }} </td>
-							<td> {{ e['album'] }} </td>
-							<td> {{ e['series'] }} </td>
-							<td> {{ e['time'] }} </td>
-							<td>
-								<!--<a href="edit" class="btn btn-info btn-sm">編輯</a>-->
-								<a href="{{ url_for('delete_playlist', sequence=e['sequence']) }}" class="btn btn-info btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
-							</td>
-						</tr>
-						{% endfor -%}
+					<tbody id="tbody">
+{% include "small_playlist.html" %}
 					</tbody>
 				</table>
 			</div>
