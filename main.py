@@ -128,7 +128,7 @@ def create_album():
             return redirect(url_for('create_album'))
 @app.route('/album/edit/<name>/', methods=['GET', 'POST'])
 def edit_album(name):
-    album_attr_seq=['name', 'year', 'artist']
+    album_attr_seq=('name', 'year', 'artist')
     data = db.select_one('album', album_attr_seq, name=name)  # tuple
     data = dict(zip(album_attr_seq, data))   # 先 zip 成[(attr, val), ()...] 再轉成 dict
 
@@ -175,7 +175,7 @@ def create_artist():
             return redirect(url_for('create_artist'))
 @app.route('/artist/edit/<name>', methods=['GET', 'POST'])
 def edit_artist(name):
-    artist_attr_seq=['name', 'company']
+    artist_attr_seq=('name', 'company')
     data = db.select_one('artist', artist_attr_seq, name=name)  # tuple
     data = dict(zip(artist_attr_seq, data))   # 先 zip 成[(attr, val), ()...] 再轉成 dict
 
@@ -207,13 +207,50 @@ def delete_artist(name):
 
 @app.route('/series/create/', methods=['GET', 'POST'])
 def create_series():
-    pass
+    series_attr_seq=('name', 'type')
+    if request.method == 'GET':
+        return render_template('edits/edit series.html')
+    elif request.method == 'POST':
+        for e in request.values:
+            print(e, ':', request.values[e])
+        result= db.insert('series', (request.values[e] for e in series_attr_seq))
+        if result:
+            flash('新增成功! ')
+            return redirect(url_for('series'))
+        else:
+            flash('新增失敗! ')
+            return redirect(url_for('create_series'))
 @app.route('/series/edit/<name>/', methods=['GET', 'POST'])
 def edit_series(name):
-    pass
+    series_attr_seq=('name', 'type')
+    data = db.select_one('series', series_attr_seq, name=name)  # tuple
+    data = dict(zip(series_attr_seq, data))   # 先 zip 成[(attr, val), ()...] 再轉成 dict
+
+    if request.method == 'GET':
+        for e in data:
+            if data[e] == None:
+                data[e] = ''
+        print(data)
+        return render_template('edits/edit series.html', **data)
+
+    elif request.method == 'POST':
+        for e in request.values:
+            print(e, ':', request.values[e])
+
+        result=db.update('series', request.values, data, name=name)
+        if result:
+            flash('更新成功! ')
+            return redirect(url_for('series'))
+        else:
+            flash('更新失敗! ')
+            return redirect(url_for('edit_series', **request.values, name=name))
 @app.route('/series/_delete/<name>', methods=['GET', 'POST'])
 def delete_series(name):
-    pass
+    if db.delete('series', name=name):
+        flash('刪除成功')
+    else:
+        flash('刪除失敗')
+    return redirect(url_for('series'))
 
 if __name__ == "__main__":
     db = Database()

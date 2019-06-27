@@ -11,9 +11,7 @@
 		// check completion
 		// name, artist, link, album, series, time
 		function myfunc() {
-			if ($("#name").val() && $("#artist").val() &&
-				$("#link").val() && $("#album").val() &&
-				$("#series").val() && $("#time").val()) {
+			if ($("#name").val()) {
 
 				alert("送出!");
 				return true;
@@ -22,8 +20,6 @@
 				return false;
 			}
 		}
-
-		function dotest() {}
 	</script>
 </head>
 
@@ -47,8 +43,8 @@
 			<div class="form-group row" style="margin-top:20px">
 				<label class="col-form-label" style="margin-left:15px">種類</label>
 				<div class="col-7">
-					<input class="form-control" type="text" name="artist" value='{{ artist }}' placeholder='artist...>'
-						id="artist" style="margin-left:20px">
+					<input class="form-control" type="text" name="type" value='{{ type }}' placeholder='type...>'
+						id="type" style="margin-left:20px">
 				</div>
 			</div>
 
@@ -58,9 +54,6 @@
 			<!-- 返回按鈕-->
 			<input type="button" id="back" class="btn btn-warning" value="返回" href="javascript:;"
 				onclick="location.href='/';" style="margin-bottom:50px; margin-left:10px">
-
-			<input type="button" id="test" class="btn btn-warning" value="測試" href="javascript:;" onclick="dotest()"
-				style="margin-bottom:50px; margin-left:20px">
 		</form>
 	</div>
 
