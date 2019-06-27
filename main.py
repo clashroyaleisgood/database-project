@@ -296,7 +296,7 @@ def delete_series(name):
 if __name__ == "__main__":
     db = Database()
     db.connect()
-    db.select_db(db = 'temp_muxic')
+    db.select_db(db = 'Muxic')
 
     app.secret_key = 'my secret key'
     app.run(debug = True, port = 5000)
