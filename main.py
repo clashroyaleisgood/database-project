@@ -59,7 +59,6 @@ def edit_song(id):
     data = db.select_one('song', song_attr_seq, ID=id)  # tuple
     data = dict(zip(song_attr_seq, data))   # 先 zip 成[(attr, val), ()...] 再轉成 dict
     if request.method == 'GET':
-        
         for e in data:
             if data[e] == None:
                 data[e] = ''
@@ -108,6 +107,7 @@ def delete_song(id):
     else:
         flash('刪除失敗')
     return redirect(url_for('song'))
+
 @app.route('/album/create/', methods=['GET', 'POST'])
 def create_album():
     # album_attr_seq=['name', 'artist', 'year'] 這是錯的順序...
@@ -127,10 +127,36 @@ def create_album():
 
 @app.route('/album/edit/<name>', methods=['GET', 'POST'])
 def edit_album(name):
-    return render_template('edit album')
-@app.route('/album/_delete/<name>')
+    album_attr_seq=['name', 'year', 'artist']
+    data = db.select_one('album', album_attr_seq, name=name)  # tuple
+    data = dict(zip(album_attr_seq, data))   # 先 zip 成[(attr, val), ()...] 再轉成 dict
+
+    if request.method == 'GET':
+        for e in data:
+            if data[e] == None:
+                data[e] = ''
+        print(data)
+        return render_template('edits/edit album.html', **data)
+
+    elif request.method == 'POST':
+        for e in request.values:
+            print(e, ':', request.values[e])
+
+        result=db.update('album', request.values, data, name=name)
+        if result:
+            flash('更新成功! ')
+            return redirect(url_for('album'))
+        else:
+            flash('更新失敗! ')
+            return redirect(url_for('edit_album', **request.values, name=name))
+
+@app.route('/album/_delete/<name>', methods=['POST'])
 def delete_album(name):
-    return redirect('album')
+    if db.delete('album', name=name):
+        flash('刪除成功')
+    else:
+        flash('刪除失敗')
+    return redirect(url_for('album'))
 
 if __name__ == "__main__":
     db = Database()
