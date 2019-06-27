@@ -42,7 +42,7 @@ def artist():
 def album():
     album_attr_sequence=['name', 'artist', 'year']
     data= get_whole_table(db.album(), album_attr_sequence)
-    # data={'name':'name', 'artist':'artist', 'year':1999}
+    
     return render_template('album.html', data=data)
 
 @app.route('/series/', methods=['GET'])
@@ -110,7 +110,21 @@ def delete_song(id):
     return redirect(url_for('song'))
 @app.route('/album/create/', methods=['GET', 'POST'])
 def create_album():
-    return render_template('edit album')
+    # album_attr_seq=['name', 'artist', 'year'] 這是錯的順序...
+    album_attr_seq=['name', 'year', 'artist']
+    if request.method == 'GET':
+        return render_template('edits/edit album.html')
+    elif request.method == 'POST':
+        for e in request.values:
+            print(e, ':', request.values[e])
+        result= db.insert('album', (request.values[e] for e in album_attr_seq))
+        if result:
+            flash('新增成功! ')
+            return redirect(url_for('album'))
+        else:
+            flash('新增失敗! ')
+            return redirect(url_for('create_album'))
+
 @app.route('/album/edit/<name>', methods=['GET', 'POST'])
 def edit_album(name):
     return render_template('edit album')
