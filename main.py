@@ -19,9 +19,9 @@ def main_page():
 
 @app.route('/add_to_list/<int:id>', methods=['GET'])
 def add_to_list(id):
-    # insert song(id) to playlist
     if db.insert('playlist', [id], default=True):
-        flash("add song: {} to list".format(id))
+        song_name=db.select_one('song', 'name', id=id)[0]
+        flash("add song: {} to list".format(song_name))
     else:
         flash('新增失敗')
     return redirect(url_for('main_page'))
