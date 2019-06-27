@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def main_page():
-    playlist_sequence=['name', 'artist', 'album', 'series', 'time', 'sequence']
+    playlist_sequence=['name', 'artist', 'album', 'series', 'time', 'link', 'sequence']
     data = get_whole_table(db.playlist(), playlist_sequence)
     
     return render_template('init.html', data=data)

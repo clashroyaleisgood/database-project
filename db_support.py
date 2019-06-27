@@ -135,7 +135,7 @@ class Database():
         self.output('series', 'name, type', kwargs=None)
         return self.cursor
     def playlist(self):
-        self.exec('SELECT name, artist, album, series, time, Sequence FROM song JOIN playlist ON ID = song_id ORDER BY Sequence;')
+        self.exec('SELECT name, artist, album, series, time, link, Sequence FROM song JOIN playlist ON ID = song_id ORDER BY Sequence;')
         return self.cursor
 def get_whole_table(cursor, attribute_sequence):
     data=[]
