@@ -56,12 +56,7 @@
 				onclick="location.href='/';" style="margin-bottom:50px; margin-left:10px">
 		</form>
 	</div>
-
-	<script>
-		//{%- with messages = get_flashed_messages() -%}{%- if messages -%}{%- for message in messages %}
-		alert('{{ message }}');
-		//{% endfor -%}{%- endif -%}{%- endwith %}
-	</script>
+{% include "macros/flash msg.html" %}	
 </body>
 
 </html>

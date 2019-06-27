@@ -40,9 +40,9 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% for e in data %}
+						{% for e in data -%}
 						<tr>
-							<td> {{ e[0] }} </td>
+							<td> {{ loop.index }} </td>
 							<td> {{ e['name'] }} </td>
 							<td> {{ e['artist'] }} </td>
 							<td> {{ e['album'] }} </td>
@@ -53,17 +53,13 @@
 								<a href="{{ url_for('delete_playlist', sequence=e['sequence']) }}" class="btn btn-info btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
 							</td>
 						</tr>
-						{% endfor %}
+						{% endfor -%}
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
-	<script>
-		//{%- with messages = get_flashed_messages() -%}{%- if messages -%}{%- for message in messages %}
-		alert('{{ message }}');
-		//{% endfor -%}{%- endif -%}{%- endwith %}
-	</script>
+{% include "macros/flash msg.html" %}
 </body>
 
 </html>
