@@ -5,7 +5,7 @@
 [![](https://img.shields.io/badge/Python-Flask-blue.svg?logo=flask)](http://flask.pocoo.org/)
 ![](https://img.shields.io/badge/front_end-Bootstrap%20%7C%20jQuery-blueviolet.svg)
 [![](https://img.shields.io/badge/YouTube_API-orange.svg?logo=youtube&logoColor=red&labelColor=white)](https://developers.google.com/youtube/iframe_api_reference)  
-[![](https://img.shields.io/badge/Just-Fun-yellow.svg)](https://shields.io/)
+[![](https://img.shields.io/badge/Just-for_Fun-yellow.svg)](https://shields.io/)
 
 > database with music playlist  
 > 師大資工 資料庫 期末專題 **MuXic**  
