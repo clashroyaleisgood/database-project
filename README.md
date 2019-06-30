@@ -54,7 +54,7 @@ just execute the [main.py](main.py)
 then go to [127.0.0.1:5000/]()
 
 ---
-# 資料庫架構
+# Database Structure
 [![](https://i.imgur.com/kyxrnQ0.jpg)](/SQL/DDL.sql)  
 link 指的是 youtube 影片連結後的那一段  
 /watch?v=這邊
@@ -65,8 +65,8 @@ link 指的是 youtube 影片連結後的那一段
 3. 功能簡單而完整，操作直覺
 4. 有小彩蛋 feat. 嘎啦嘎拉
 
-# Special Technique
-## 自動影片連續播放
-1. 使用 YouTube API，接收到"播放結束"的 event 後，post 到網址 '/play_next_song/'，告訴 server 要跳下一首了，並且要求下一個連結 (直接跟 server 拿 避免播放清單有更新，拿到錯的資料)
-2. 拿到之後刪掉舊影片的 div，重新生成一個用來放新影片；再向伺服器要求目前最新的播放清單列表('/small_playlist/')，更新到表格中。
-## 將許多**相同的** html 區塊包成 macro
+## Special Technique
+- ### 自動影片連續播放
+> 1. 使用 YouTube API，接收到"播放結束"的 event 後，post 到網址 '/play_next_song/'，告訴 server 要跳下一首了，並且要求下一個連結 (直接跟 server 拿 避免播放清單有更新，拿到錯的資料)
+> 2. 拿到之後刪掉舊影片的 div，重新生成一個用來放新影片；再向伺服器要求目前最新的播放清單列表('/small_playlist/')，更新到表格中。
+- ### 將許多相同的 html 區塊包成 macro
